@@ -37,6 +37,9 @@ if __name__ == "__main__":
 interval = 5 * 60
  
 # プログラムを実行する関数を作成
+def take_picture():
+  capture_and_save_photo(file_path, camera_index)
+  
 while True:
   take_picture()
   time.sleep(interval)
