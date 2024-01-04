@@ -2,45 +2,45 @@ from keras.models import load_model  # TensorFlow is required for Keras to work
 from PIL import Image, ImageOps  # Install pillow instead of PIL
 import numpy as np
 
-def estimate():
-    # Disable scientific notation for clarity
+# モデルを使って推論する処理を関数にまとめた
+# 引数として画像のパスを受け取り、推論結果を返す
+def predict(picture_path: str) -> str:
     np.set_printoptions(suppress=True)
 
-    # Load the model
+    # ファイル名からモデルを読み込む
     model = load_model("keras_model.h5", compile=False)
 
-    # Load the labels
+    # ファイル名からクラス名を読み込む
     class_names = open("labels.txt", "r").readlines()
 
-    # Create the array of the right shape to feed into the keras model
-    # The 'length' or number of images you can put into the array is
-    # determined by the first position in the shape tuple, in this case 1
+    # モデルに入力する画像データを格納する配列を作成(画像1枚、横224ピクセル、縦224ピクセル、RGBの3色)
     data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
-    # Replace this with the path to your image
-    image = Image.open("captured_photo.jpg").convert("RGB")
+    # ファイル名から画像を読み込む、引数として入力された画像のパスを指定
+    image = Image.open(picture_path).convert("RGB")
 
-    # resizing the image to be at least 224x224 and then cropping from the center
+    # 画像のサイズを224x224ピクセルに変換
     size = (224, 224)
-    #image = ImageOps.fit(image, size, Image.Resampling.LANCZOS)
-
     image = image.resize((size),resample=Image.BICUBIC)
 
-    # turn the image into a numpy array
+    # 画像をnumpy配列に変換
     image_array = np.asarray(image)
 
-    # Normalize the image
+    # 画像を正規化
     normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
 
-    # Load the image into the array
+    # 画像をモデル入力用配列に格納
     data[0] = normalized_image_array
 
-    # Predicts the model
+    # 推論を実行
     prediction = model.predict(data)
     index = np.argmax(prediction)
     class_name = class_names[index]
     confidence_score = prediction[0][index]
 
-    # Print prediction and confidence score
+    # 推論結果を表示
     print("Class:", class_name[2:], end="")
     print("Confidence Score:", confidence_score)
+
+    # 分類結果(クラス名)を呼び出し元に返す
+    return class_name[2:]

@@ -1,8 +1,14 @@
 import time
 import cv2
 
-def capture_and_save_photo(file_path, camera_index):
- # カメラをオープン
+def capture_and_save_photo(camera_index) -> str:
+    # キャプチャして保存するファイルのパスを指定
+    file_path = 'captured_photo.jpg'
+
+    # カメラのインデックスを指定 (通常は0から始まります)
+    camera_index = 0
+
+    # カメラをオープン
     cap = cv2.VideoCapture(camera_index)
 
     # カメラが正常にオープンされたか確認
@@ -23,12 +29,5 @@ def capture_and_save_photo(file_path, camera_index):
     else:
         print("Error: 画像のキャプチャに失敗しました。")
 
-if __name__ == "__main__":
-    # キャプチャして保存するファイルのパスを指定
-    file_path = 'captured_photo.jpg'
-
-    # カメラのインデックスを指定 (通常は0から始まります)
-    camera_index = 0
-
-    # 写真を撮影して保存
-    capture_and_save_photo(file_path, camera_index)
+    # 保存したパスを呼び出し元に返す
+    return file_path
