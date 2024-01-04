@@ -10,7 +10,8 @@ interval = 5 * 60
 # プログラムを実行する関数を作成
 def capture_photo_and_predict():
   photo = capture_and_save_photo(file_path, camera_index)
-  predict(picture)
+  result = predict(picture)
+  # TODO: resultの結果に応じてLINEなどに通知する処理をここに書く
 
 while True:
   capture_photo_and_predict()
